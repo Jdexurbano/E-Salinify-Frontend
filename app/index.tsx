@@ -1,15 +1,22 @@
-import { Text, View } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+  const [hasOnboarded, setHasOnBoarded] = useState<boolean | null>(null);
+
+  //check in the localstorage if the user is already onboarded
+  useEffect(() => {
+    AsyncStorage.getItem("hasOnBoarded").then((value) => {
+      setHasOnBoarded(value === "true");
+    });
+  });
+
+  if (hasOnboarded === null) return null;
+
+  //decide what the screen to be loaded
+  return hasOnboarded ? (
+    <Redirect href="/home" />
+  ) : (
+    <Redirect href="/onboarding" />
   );
 }
