@@ -2,10 +2,12 @@ import { HomeScreenStyle } from "@/assets/styles/HomeScreen.style";
 import CameraCommunication from "@/components/homeScreen/CameraCommunication";
 import { CameraCommunicationData } from "@/data/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 const Home = () => {
   const [activeId, setActiveId] = useState<number | null>(null);
+  const router = useRouter();
 
   const handleDeleteItem = () => {
     AsyncStorage.clear();
@@ -13,6 +15,13 @@ const Home = () => {
 
   const handleActive = (id: number) => {
     setActiveId((prevId) => (prevId === id ? null : id));
+  };
+
+  const handleNavigate = () => {
+    handleDeleteItem();
+    activeId === 1
+      ? router.push("/home/camera")
+      : router.push("/home/keyboard");
   };
   return (
     <View style={HomeScreenStyle.MainContainer}>
@@ -38,7 +47,7 @@ const Home = () => {
         {activeId ? (
           <TouchableOpacity
             style={HomeScreenStyle.StartButton}
-            onPress={handleDeleteItem}
+            onPress={handleNavigate}
           >
             <Text style={HomeScreenStyle.StartButtonText}>Start Now</Text>
           </TouchableOpacity>
